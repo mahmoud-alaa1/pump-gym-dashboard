@@ -1,0 +1,16 @@
+{
+  "appId": "com.electroncourse.freecodecamp",
+  "files": ["dist-electron/**/*", "dist-react/**/*"],
+  "icon": "./desktopIcon.png",
+  "mac": {
+    "target": "dmg"
+  },
+  "linux": {
+    "target": "AppImage",
+    "category": "Utility"
+  },
+  "win": {
+    "target": ["msi", "portable"]
+  },
+  "extraResources": ["dist-electron/preload.cjs", "src/assets/**"]
+}
