@@ -1,0 +1,63 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./data.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Employee {
+  id        Int     @id @default(autoincrement())
+  name      String
+  email     String  @unique
+  password  String
+  role      Role    @default(EMPLOYEE)
+}
+
+model Client {
+  id               Int      @id @default(autoincrement())
+  client_name      String
+  subscription_type SubscriptionType
+  payment          Int
+  phone            String
+  code             Int
+  payment_type     PaymentType
+  visitors         Visitor
+  created_by       String
+  gender           Gender
+  created_at       DateTime @default(now())
+}
+
+enum Role {
+  ADMIN
+  EMPLOYEE
+}
+
+enum SubscriptionType {
+  LESSONS_8
+  LESSONS_12
+  ONE_MONTH
+  TWO_MONTHS
+  THREE_MONTHS
+  SIX_MONTHS
+  YEAR
+}
+
+enum PaymentType {
+  NEW
+  RENEWAL
+}
+
+enum Visitor {
+  FACEBOOK
+  INSTAGRAM
+  TIKTOK
+  WHATSAPP
+  REFERRAL
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}

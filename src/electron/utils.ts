@@ -1,25 +1,48 @@
 import { ipcMain, WebContents, WebFrameMain } from "electron";
 import { getUIPath } from "./pathResolver.js";
 import { pathToFileURL } from "url";
+import { errorResponse, successResponse } from "./utils/responses.js";
+import { AppError } from "./errors/AppError.js";
 
 export function isDev(): boolean {
   return process.env.NODE_ENV === "development";
 }
 
-export function ipcMainHandle<Key extends keyof EventPayloadMapping>(
+export function ipcMainHandle<Key extends keyof EventMap>(
   key: Key,
-  handler: () => EventPayloadMapping[Key]
+  handler: (
+    payload: EventMap[Key]["request"],
+    event: Electron.IpcMainInvokeEvent
+  ) => Promise<EventMap[Key]["response"]> | EventMap[Key]["response"],
+  message?: string
 ) {
-  ipcMain.handle(key, (event) => {
-    if (event.senderFrame) validateEventFrame(event.senderFrame);
-    return handler();
-  });
+  ipcMain.handle(
+    key,
+    async (event, payload): Promise<ApiResponse<EventMap[Key]["response"]>> => {
+      try {
+        if (event.senderFrame) validateEventFrame(event.senderFrame);
+        const data = await handler(payload, event);
+        return successResponse(data, message);
+      } catch (err) {
+        console.log(
+          "***********************************************************************"
+        );
+        if (err instanceof AppError) {
+          console.error("here i throw fkin native err");
+          throw err;
+        }
+        throw new AppError("خطا داخلي من التطبيق", {
+          code: "INTERNAL_ERROR",
+        });
+      }
+    }
+  );
 }
 
-export function ipcWebContentsSend<Key extends keyof EventPayloadMapping>(
+export function ipcWebContentsSend<Key extends keyof EventMap>(
   key: Key,
   webContents: WebContents,
-  payload: EventPayloadMapping[Key]
+  payload: EventMap[Key]["request"]
 ) {
   webContents.send(key, payload);
 }

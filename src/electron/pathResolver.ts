@@ -17,3 +17,6 @@ export function getUIPath(): string {
 export function getAssetsPath(): string {
   return path.join(app.getAppPath(), isDev() ? "." : "..", "src", "assets");
 }
+export function getDatabasePath(): string {
+  return path.join(app.getAppPath(), isDev() ? "." : "..", "prisma", "data.db");
+}

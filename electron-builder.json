@@ -12,5 +12,5 @@
   "win": {
     "target": ["msi", "portable"]
   },
-  "extraResources": ["dist-electron/preload.cjs", "src/assets/**"]
+  "extraResources": ["dist-electron/preload.cjs", "src/assets/**","prisma/**"]
 }
