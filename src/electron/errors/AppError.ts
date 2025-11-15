@@ -1,13 +1,13 @@
 export class AppError extends Error {
   public code?: string;
-  public errors?: { field?: string; message: string }[];
+  public errors?: Record<string, string[]>;
   public status?: number;
 
   constructor(
     message: string,
     options?: {
       code?: string;
-      errors?: { field?: string; message: string }[];
+      errors?: Record<string, string[]>;
       status?: number;
     }
   ) {
@@ -16,6 +16,14 @@ export class AppError extends Error {
     this.code = options?.code;
     this.errors = options?.errors;
     this.status = options?.status;
+  }
+  serialize() {
+    return {
+      message: this.message,
+      code: this.code,
+      status: this.status,
+      errors: this.errors,
+    };
   }
 }
 

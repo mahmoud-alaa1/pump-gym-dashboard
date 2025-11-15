@@ -1,12 +1,9 @@
-import { handleServiceError } from "@/frontend/errors/AppError";
+import { callService } from "@/frontend/lib/utils";
 import type { loginSchema } from "../schemas";
+import type { Employee } from "@prisma/client";
 
 export async function loginService(data: loginSchema) {
-  try {
-    const res = await window.electron.login(data);
-    console.log(res);
-    return res;
-  } catch (err) {
-    throw handleServiceError(err);
-  }
+  return callService<Omit<Employee, "password">>(() =>
+    window.electron.login(data)
+  );
 }

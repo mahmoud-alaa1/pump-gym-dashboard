@@ -16,27 +16,23 @@ export function ipcMainHandle<Key extends keyof EventMap>(
   ) => Promise<EventMap[Key]["response"]> | EventMap[Key]["response"],
   message?: string
 ) {
-  ipcMain.handle(
-    key,
-    async (event, payload): Promise<ApiResponse<EventMap[Key]["response"]>> => {
-      try {
-        if (event.senderFrame) validateEventFrame(event.senderFrame);
-        const data = await handler(payload, event);
-        return successResponse(data, message);
-      } catch (err) {
-        console.log(
-          "***********************************************************************"
-        );
-        if (err instanceof AppError) {
-          console.error("here i throw fkin native err");
-          throw err;
-        }
-        throw new AppError("خطا داخلي من التطبيق", {
-          code: "INTERNAL_ERROR",
-        });
+  ipcMain.handle(key, async (event, payload) => {
+    try {
+      if (event.senderFrame) validateEventFrame(event.senderFrame);
+      const data = await handler(payload, event);
+      return { ok: true, data, message };
+    } catch (err) {
+      if (err instanceof AppError) {
+        return { ok: false, error: err.serialize() };
       }
+
+      const internalErr = new AppError("خطأ داخلي من التطبيق", {
+        code: "INTERNAL_ERROR",
+      });
+
+      return { ok: false, error: internalErr.serialize() };
     }
-  );
+  });
 }
 
 export function ipcWebContentsSend<Key extends keyof EventMap>(

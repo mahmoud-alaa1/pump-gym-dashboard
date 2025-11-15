@@ -1,13 +1,13 @@
 export class AppError extends Error {
   public code?: string;
-  public errors?: { field?: string; message: string }[];
+  public errors?: Record<string, string[]>;
   public status?: number;
 
   constructor(
     message: string,
     options?: {
       code?: string;
-      errors?: { field?: string; message: string }[];
+      errors?: Record<string, string[]>;
       status?: number;
     }
   ) {
@@ -16,6 +16,14 @@ export class AppError extends Error {
     this.code = options?.code;
     this.errors = options?.errors;
     this.status = options?.status;
+  }
+  serialize() {
+    return {
+      message: this.message,
+      code: this.code,
+      status: this.status,
+      errors: this.errors,
+    };
   }
 }
 
@@ -26,26 +34,19 @@ export const ErrorCodes = {
   VALIDATION_ERROR: "VALIDATION_ERROR",
 } as const;
 
-export type ErrorCode = (typeof ErrorCodes)[keyof typeof ErrorCodes];
-
-export function handleServiceError(err: unknown): AppError {
-  if (isErrorObject(err)) {
-    return new AppError(err.message, {
-      code: err.code,
-      errors: err.errors,
-      status: err.status,
-    });
-  }
-  console.error("Unhandled error", err);
-  return new AppError("حدث خطأ غير متوقع");
-}
+export type ErrorCodes = (typeof ErrorCodes)[keyof typeof ErrorCodes];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isErrorObject(err: any): err is AppError {
-  console.log(err.code);
-  console.log(err.name);
-  console.log(err.message);
-  return (
-    err && typeof err === "object" && "name" in err && err.name === "AppError"
-  );
+export function handleServiceError(err: any): AppError {
+  if (err && typeof err === "object") {
+    const message = err.message ?? "Unknown error";
+    const code = err.code ?? "UNKNOWN_ERROR";
+    const status = err.status;
+    return new AppError(message, { code, status });
+  }
+
+  // Fallback for truly unknown errors
+  return new AppError("Unexpected error", {
+    code: "UNEXPECTED_ERROR",
+  });
 }
