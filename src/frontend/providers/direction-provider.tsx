@@ -5,5 +5,5 @@ export default function DirectionProvider({
 }: {
   children: React.ReactNode;
 }) {
-  return <Provider dir="rtl">{children}</Provider>;
+  return <Provider dir="ltr">{children}</Provider>;
 }

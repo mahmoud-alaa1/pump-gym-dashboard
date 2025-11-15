@@ -31,5 +31,5 @@
     "noUncheckedSideEffectImports": true
   },
   "exclude": ["src/electron"],
-  "include": ["src/**/*", "types.d.ts"]
+  "include": ["src/**/*", "types.d.ts", "src/electron/scripts"]
 }
