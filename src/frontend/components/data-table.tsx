@@ -1,6 +1,4 @@
-// components/DataTable.tsx
-"use client";
-
+"use no memo";
 import {
   Table,
   TableBody,
@@ -25,7 +23,6 @@ import {
   ChevronsRight,
 } from "lucide-react";
 import { Skeleton } from "@front/components/ui/skeleton";
-import { useState } from "react";
 
 interface DataTableProps<TData> {
   table: TableType<TData>;
@@ -42,8 +39,6 @@ export default function DataTable<TData>({
   const currentPage = table.getState().pagination.pageIndex + 1;
   const totalPages = table.getPageCount();
   const pageSize = table.getState().pagination.pageSize;
-  const selectedCount = table.getSelectedRowModel().rows.length;
-  const [page, setPage] = useState("1");
   // Calculate display range
   const startRow = table.getState().pagination.pageIndex * pageSize + 1;
   const endRow = Math.min(startRow + pageSize - 1, totalRows);
@@ -80,22 +75,35 @@ export default function DataTable<TData>({
                   ))}
                 </TableRow>
               ))
-            ) : table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="py-4">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
+            ) : table.getRowModel().rows?.length > 0 ? (
+              <>
+                {table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id} className="py-4">
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+                {Array.from({
+                  length: pageSize - table.getRowModel().rows.length,
+                }).map((row, i) => (
+                  <TableRow key={`empty-${i}`}>
+                    {table.getVisibleFlatColumns().map((_, j) => (
+                      <TableCell key={j} className="py-4">
+                        &nbsp;
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </>
             ) : (
               <TableRow>
                 <TableCell
@@ -117,11 +125,6 @@ export default function DataTable<TData>({
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         {/* Selection and Info */}
         <div className="flex flex-col gap-1 text-gray-600 text-sm">
-          {selectedCount > 0 && (
-            <div className="font-medium text-blue-600">
-              تم تحديد {selectedCount} من {totalRows} صف
-            </div>
-          )}
           <div>
             عرض {startRow} إلى {endRow} من {totalRows} نتيجة
           </div>
@@ -154,7 +157,6 @@ export default function DataTable<TData>({
               variant="outline"
               className="hidden h-8 w-8 p-0 lg:flex"
               onClick={() => {
-                setPage("1");
                 table.setPageIndex(0);
               }}
               disabled={!table.getCanPreviousPage()}
@@ -168,7 +170,6 @@ export default function DataTable<TData>({
               variant="outline"
               className="h-8 w-8 p-0"
               onClick={() => {
-                setPage((currentPage - 1).toString());
                 table.previousPage();
               }}
               disabled={!table.getCanPreviousPage()}
@@ -187,7 +188,6 @@ export default function DataTable<TData>({
               variant="outline"
               className="h-8 w-8 p-0"
               onClick={() => {
-                setPage((currentPage + 1).toString());
                 table.nextPage();
               }}
               disabled={!table.getCanNextPage()}
@@ -201,7 +201,6 @@ export default function DataTable<TData>({
               variant="outline"
               className="hidden h-8 w-8 p-0 lg:flex"
               onClick={() => {
-                setPage(totalPages.toString());
                 table.setPageIndex(table.getPageCount() - 1);
               }}
               disabled={!table.getCanNextPage()}

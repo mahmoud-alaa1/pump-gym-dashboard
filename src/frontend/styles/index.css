@@ -5,7 +5,8 @@
 
 @font-face {
   font-family: "Alexandria";
-  src: url("/src/assets/fonts/Alexandria-VariableFont_wght.ttf") format("truetype");
+  src: url("/src/assets/fonts/Alexandria-VariableFont_wght.ttf")
+    format("truetype");
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
@@ -118,6 +119,10 @@
   --sidebar-ring: oklch(0.396 0.141 25.723);
 }
 
+a.active {
+  @apply bg-gray-50 font-medium;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -129,4 +134,16 @@
 
 body {
   font-family: "Alexandria", sans-serif;
+}
+
+@keyframes scale {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }

@@ -15,7 +15,7 @@ export default function MainLayout() {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex justify-between px-4  items-center h-16 shrink-0  gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+        <header className="flex justify-between p-4  items-center  shrink-0  gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 ">
             <SidebarTrigger className="-ms-1" />
             <Separator
@@ -23,10 +23,10 @@ export default function MainLayout() {
               className="me-2 data-[orientation=vertical]:h-4"
             />
           </div>
-          <img src={pumpImage} alt="Pump Gym" className="size-10" />
+          <img src={pumpImage} alt="Pump Gym" className="size-20" />
         </header>
 
-        <main className="p-6">
+        <main className="p-4">
           <Outlet />
         </main>
         {/* <div className="flex flex-1 flex-col gap-4 p-4 pt-0">

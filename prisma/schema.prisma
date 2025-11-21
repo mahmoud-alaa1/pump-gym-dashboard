@@ -21,7 +21,7 @@ model Client {
   subscription_type SubscriptionType
   payment          Int
   phone            String
-  code             Int
+  code             String
   payment_type     PaymentType
   visitors         Visitor
   created_by       String

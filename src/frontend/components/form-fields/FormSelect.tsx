@@ -1,5 +1,4 @@
-/** Choose where to place the label */
-import type { InputHTMLAttributes, ReactNode } from "react";
+import type { ReactNode } from "react";
 import { type FieldValues, type Path, useFormContext } from "react-hook-form";
 import {
   FormControl,
@@ -9,32 +8,43 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { Input } from "../ui/input";
 import { cn } from "@/frontend/lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
-interface FormInputProps<TFormValues extends FieldValues>
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, "name" | "defaultValue"> {
+interface SelectOption {
+  label: string;
+  value: string;
+}
+
+interface FormSelectProps<TFormValues extends FieldValues> {
   name: Path<TFormValues>;
+  options: SelectOption[];
   label?: ReactNode;
   labelPosition?: "top" | "left" | "right" | "none";
   description?: string | ReactNode;
-  Icon?: ReactNode;
+  placeholder?: string;
   labelClassName?: string;
-  defaultValue?: string | number | readonly string[];
   descriptionClassName?: string;
+  className?: string;
 }
 
-export default function FormInput<TFormValues extends FieldValues>({
-  label,
+export default function FormSelect<TFormValues extends FieldValues>({
   name,
-  Icon,
+  options,
+  label,
+  labelPosition = "top",
   description,
-  className,
+  placeholder = "اختر...",
   labelClassName,
   descriptionClassName,
-  labelPosition = "top",
-  ...inputProps
-}: FormInputProps<TFormValues>) {
+  className,
+}: FormSelectProps<TFormValues>) {
   const form = useFormContext<TFormValues>();
 
   return (
@@ -62,26 +72,22 @@ export default function FormInput<TFormValues extends FieldValues>({
               </FormLabel>
             )}
 
-            {/* === Input with optional icon === */}
             <FormControl>
-              <div className="relative h-fit">
-                {Icon && (
-                  <div className="absolute inset-y-0 end-2.5 flex items-center justify-center text-primary">
-                    {Icon}
-                  </div>
-                )}
-                <Input
-                  id={name}
-                  {...field}
-                  {...inputProps}
-                  className={cn(Icon && "pe-9 transition-all", className)}
-                  value={field.value}
-                />
-              </div>
+              <Select value={field.value} onValueChange={field.onChange}>
+                <SelectTrigger className={cn("w-full", className)}>
+                  <SelectValue placeholder={placeholder} />
+                </SelectTrigger>
+                <SelectContent>
+                  {options.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </FormControl>
           </div>
 
-          {/* === Description and Error === */}
           {description && (
             <FormDescription className={descriptionClassName}>
               {description}

@@ -19,15 +19,13 @@ const data = {
   navMain: [
     {
       title: "العملاء",
-      url: "#",
+      url: "/clients",
       icon: Users,
-      isActive: true,
     },
     {
       title: "المدربين",
-      url: "#",
+      url: "/trainers",
       icon: User,
-      isActive: false,
     },
   ],
 };

@@ -1,5 +1,4 @@
-/** Choose where to place the label */
-import type { InputHTMLAttributes, ReactNode } from "react";
+import type { ReactNode } from "react";
 import { type FieldValues, type Path, useFormContext } from "react-hook-form";
 import {
   FormControl,
@@ -9,32 +8,36 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { Input } from "../ui/input";
 import { cn } from "@/frontend/lib/utils";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { Label } from "../ui/label";
 
-interface FormInputProps<TFormValues extends FieldValues>
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, "name" | "defaultValue"> {
+interface RadioOption {
+  label: ReactNode;
+  value: string;
+}
+
+interface FormRadioGroupProps<TFormValues extends FieldValues> {
   name: Path<TFormValues>;
+  options: RadioOption[];
   label?: ReactNode;
   labelPosition?: "top" | "left" | "right" | "none";
   description?: string | ReactNode;
-  Icon?: ReactNode;
   labelClassName?: string;
-  defaultValue?: string | number | readonly string[];
   descriptionClassName?: string;
+  className?: string;
 }
 
-export default function FormInput<TFormValues extends FieldValues>({
-  label,
+export default function FormRadioGroup<TFormValues extends FieldValues>({
   name,
-  Icon,
+  options,
+  label,
+  labelPosition = "top",
   description,
-  className,
   labelClassName,
   descriptionClassName,
-  labelPosition = "top",
-  ...inputProps
-}: FormInputProps<TFormValues>) {
+  className,
+}: FormRadioGroupProps<TFormValues>) {
   const form = useFormContext<TFormValues>();
 
   return (
@@ -62,26 +65,27 @@ export default function FormInput<TFormValues extends FieldValues>({
               </FormLabel>
             )}
 
-            {/* === Input with optional icon === */}
             <FormControl>
-              <div className="relative h-fit">
-                {Icon && (
-                  <div className="absolute inset-y-0 end-2.5 flex items-center justify-center text-primary">
-                    {Icon}
-                  </div>
-                )}
-                <Input
-                  id={name}
-                  {...field}
-                  {...inputProps}
-                  className={cn(Icon && "pe-9 transition-all", className)}
-                  value={field.value}
-                />
-              </div>
+              <RadioGroup
+                id={name}
+                value={field.value}
+                onValueChange={field.onChange}
+                className={cn("flex gap-2 flex-wrap", className)}
+              >
+                {options.map((opt) => (
+                  <>
+                    <RadioGroupItem
+                      key={opt.value}
+                      value={opt.value}
+                      id={`${name}-${opt.value}`}
+                    />
+                    <Label htmlFor={`${name}-${opt.value}`}>{opt.label}</Label>
+                  </>
+                ))}
+              </RadioGroup>
             </FormControl>
           </div>
 
-          {/* === Description and Error === */}
           {description && (
             <FormDescription className={descriptionClassName}>
               {description}

@@ -1,4 +1,4 @@
-// hooks/useDataTable.ts
+"use client";
 
 import { useState } from "react";
 import {
@@ -12,7 +12,6 @@ import {
   ColumnFiltersState,
   VisibilityState,
   RowSelectionState,
-  PaginationState,
   TableMeta,
 } from "@tanstack/react-table";
 
@@ -31,12 +30,6 @@ export function useDataTable<TData>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  
-  // Add pagination state
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: initialPageSize,
-  });
 
   const table = useReactTable({
     data,
@@ -45,7 +38,6 @@ export function useDataTable<TData>({
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-    onPaginationChange: setPagination, // Add this
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -56,18 +48,14 @@ export function useDataTable<TData>({
       columnFilters,
       columnVisibility,
       rowSelection,
-      pagination, // Add pagination to state
     },
-    // Remove initialState - not needed anymore
+    initialState: {
+      pagination: {
+        pageSize: initialPageSize,
+      },
+    },
     meta,
   });
 
-  return {
-    table,
-    sorting,
-    columnFilters,
-    columnVisibility,
-    rowSelection,
-    pagination,
-  };
+  return { table, sorting, columnFilters, columnVisibility, rowSelection };
 }

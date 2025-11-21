@@ -5,11 +5,13 @@ import { getPreloadPath, getUIPath } from "./pathResolver.js";
 import { createTray } from "./tray.js";
 import { createMenu } from "./menu.js";
 import { mainHandleLogin } from "./handlers/auth.js";
+import { mainHandleGetClients } from "./handlers/clients/get-clients.js";
+import { mainHandleAddClient } from "./handlers/clients/add-client.js";
 
 app.whenReady().then(() => {
   const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1440,
+    height: 1440,
 
     webPreferences: {
       preload: getPreloadPath(),
@@ -29,6 +31,8 @@ app.whenReady().then(() => {
     return getStaticData();
   });
   mainHandleLogin();
+  mainHandleGetClients();
+  mainHandleAddClient();
 
   createTray(mainWindow);
   handleCloseEven(mainWindow);

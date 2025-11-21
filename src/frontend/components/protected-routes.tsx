@@ -6,11 +6,11 @@ export default function ProtectedRoutes() {
   const navigate = useNavigate();
   const auth = useAuth();
 
-  // useEffect(() => {
-  //   if (!auth.isAuthenticated) {
-  //     navigate("/login");
-  //   }
-  // }, [auth.isAuthenticated, navigate]);
+  useEffect(() => {
+    if (!auth.isAuthenticated) {
+      navigate("/login");
+    }
+  }, [auth.isAuthenticated, navigate]);
 
   return <Outlet />;
 }

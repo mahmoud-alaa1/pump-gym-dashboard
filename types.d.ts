@@ -1,4 +1,11 @@
-import { Employee } from "@prisma/client";
+import { addClientSchema } from "@/frontend/modules/clients/schema/add-client";
+import {
+  Client,
+  Employee,
+  Gender,
+  SubscriptionType,
+  Visitor,
+} from "@prisma/client";
 declare global {
   type Statistics = {
     cpuUsage: number;
@@ -36,6 +43,24 @@ declare global {
       request: { email: string; password: string };
       response: Omit<Employee, "password">;
     };
+    addClient: {
+      request: {
+        client_name: string;
+        phone: string;
+        code: string;
+        subscription_type: SubscriptionType;
+        payment: number;
+        gender: Gender;
+        visitors: Visitor;
+        payment_type: PaymentType;
+        created_by: string;
+      };
+      response: Client;
+    };
+    getClients: {
+      request: void;
+      response: Client[];
+    };
   }
 
   type UnsubscribeFunction = () => void;
@@ -52,6 +77,8 @@ declare global {
         email: string;
         password: string;
       }) => Promise<Omit<Employee, "password">>;
+      addClient: (clientData: addClientSchema) => Promise<Client>;
+      getClients: () => Promise<Client[]>;
     };
   }
   interface ISuccessResponse<T> {
