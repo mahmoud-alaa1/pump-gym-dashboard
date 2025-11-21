@@ -23,8 +23,13 @@ import {
   Hash,
   Calendar,
   DollarSign,
+  Copy,
+  Mars,
+  Venus,
 } from "lucide-react";
 import useAuth from "@/frontend/modules/auth/store/useAuth";
+import useDeleteClients from "../../hooks/useDeleteClients";
+import { toast } from "sonner";
 
 // Helper function to format subscription type
 const formatSubscriptionType = (type: string) => {
@@ -60,6 +65,7 @@ const formatVisitor = (visitor: string) => {
 const ActionsCell = ({ row }: { row: any }) => {
   const client = row.original;
   const auth = useAuth();
+  const { mutate: deleteClient } = useDeleteClients();
 
   return (
     <DropdownMenu>
@@ -72,8 +78,12 @@ const ActionsCell = ({ row }: { row: any }) => {
       <DropdownMenuContent align="end" className="w-40">
         <DropdownMenuLabel>الإجراءات</DropdownMenuLabel>
         <DropdownMenuItem
-          onClick={() => navigator.clipboard.writeText(client.id.toString())}
+          onClick={() => {
+            navigator.clipboard.writeText(client.code.toString());
+            toast.success(`تم نسخ الكود: ${client.code}`);
+          }}
         >
+          <Copy />
           نسخ الكود
         </DropdownMenuItem>
         <DropdownMenuSeparator />
@@ -90,8 +100,7 @@ const ActionsCell = ({ row }: { row: any }) => {
         {auth.user?.role === "ADMIN" && (
           <DropdownMenuItem
             onClick={() => {
-              // TODO: Implement delete functionality
-              console.log("Delete client:", client);
+              deleteClient([client.id]);
             }}
             className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-600/10"
           >
@@ -104,248 +113,253 @@ const ActionsCell = ({ row }: { row: any }) => {
   );
 };
 
-export const columns: ColumnDef<Client>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-        className="border-red-600/50 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-        className="border-red-600/50 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "code",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="hover:bg-red-600/10 hover:text-red-600"
-      >
-        <Hash className="ml-2 h-4 w-4" />
-        الكود
-        <ArrowUpDown className="mr-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => (
-      <div className="flex items-center gap-2">
-        <Badge
-          variant="outline"
-          className="border-red-600/50 text-red-600 font-mono"
+export const columns: ColumnDef<Client & { created_by?: { name: string } }>[] =
+  [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+          className="border-red-600/50 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+          className="border-red-600/50 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      accessorKey: "code",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="hover:bg-red-600/10 hover:text-red-600"
         >
-          #{row.getValue("code")}
-        </Badge>
-      </div>
-    ),
-  },
-  {
-    accessorKey: "client_name",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="hover:bg-red-600/10 hover:text-red-600"
-      >
-        <User className="ml-2 h-4 w-4" />
-        الاسم
-        <ArrowUpDown className="mr-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => (
-      <div className="font-medium">{row.getValue("client_name")}</div>
-    ),
-  },
-  {
-    accessorKey: "phone",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="hover:bg-red-600/10 hover:text-red-600"
-      >
-        <Phone className="ml-2 h-4 w-4" />
-        الهاتف
-        <ArrowUpDown className="mr-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => (
-      <div className="font-mono text-sm">{row.getValue("phone")}</div>
-    ),
-  },
-  {
-    accessorKey: "gender",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="hover:bg-red-600/10 hover:text-red-600"
-      >
-        الجنس
-        <ArrowUpDown className="mr-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const gender = row.getValue("gender") as string;
-      return (
-        <Badge variant="secondary" className="text-xs">
-          {gender === "MALE" ? "👨 ذكر" : "👩 أنثى"}
-        </Badge>
-      );
-    },
-  },
-  {
-    accessorKey: "subscription_type",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="hover:bg-red-600/10 hover:text-red-600"
-      >
-        نوع الاشتراك
-        <ArrowUpDown className="mr-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const type = row.getValue("subscription_type") as string;
-      return (
-        <Badge className="bg-linear-to-r from-red-600 to-red-700 text-white border-none">
-          {formatSubscriptionType(type)}
-        </Badge>
-      );
-    },
-  },
-  {
-    accessorKey: "payment",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="hover:bg-red-600/10 hover:text-red-600"
-      >
-        <DollarSign className="ml-2 h-4 w-4" />
-        المبلغ
-        <ArrowUpDown className="mr-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const payment = row.getValue("payment") as number;
-      return (
-        <div className="font-semibold text-green-600">
-          {payment.toLocaleString()} ج.م
+          <Hash className="ml-2 h-4 w-4" />
+          الكود
+          <ArrowUpDown className="mr-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <div className="flex items-center gap-2">
+          <Badge
+            variant="outline"
+            className="border-red-600/50 text-red-600 font-mono"
+          >
+            #{row.getValue("code")}
+          </Badge>
         </div>
-      );
+      ),
     },
-  },
-  {
-    accessorKey: "payment_type",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="hover:bg-red-600/10 hover:text-red-600"
-      >
-        نوع الدفع
-        <ArrowUpDown className="mr-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const type = row.getValue("payment_type") as string;
-      return (
-        <Badge variant={type === "NEW" ? "default" : "secondary"}>
-          {formatPaymentType(type)}
-        </Badge>
-      );
+    {
+      accessorKey: "client_name",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="hover:bg-red-600/10 hover:text-red-600"
+        >
+          <User className="ml-2 h-4 w-4" />
+          الاسم
+          <ArrowUpDown className="mr-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <div className="font-medium">{row.getValue("client_name")}</div>
+      ),
     },
-  },
-  {
-    accessorKey: "visitors",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="hover:bg-red-600/10 hover:text-red-600"
-      >
-        المصدر
-        <ArrowUpDown className="mr-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const visitor = row.getValue("visitors") as string;
-      const visitorIcons: Record<string, string> = {
-        FACEBOOK: "📘",
-        INSTAGRAM: "📷",
-        TIKTOK: "🎵",
-        WHATSAPP: "💬",
-        REFERRAL: "👥",
-      };
-      return (
-        <Badge variant="outline" className="text-xs">
-          {visitorIcons[visitor]} {formatVisitor(visitor)}
-        </Badge>
-      );
+    {
+      accessorKey: "phone",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="hover:bg-red-600/10 hover:text-red-600"
+        >
+          <Phone className="ml-2 h-4 w-4" />
+          الهاتف
+          <ArrowUpDown className="mr-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <div className="font-mono text-sm">{row.getValue("phone")}</div>
+      ),
     },
-  },
-  {
-    accessorKey: "created_at",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="hover:bg-red-600/10 hover:text-red-600"
-      >
-        <Calendar className="ml-2 h-4 w-4" />
-        تاريخ التسجيل
-        <ArrowUpDown className="mr-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const date = row.getValue("created_at") as Date;
-      const formattedDate = new Date(date).toLocaleDateString("ar-EG", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      });
-      return (
-        <div className="text-sm text-muted-foreground">{formattedDate}</div>
-      );
+    {
+      accessorKey: "gender",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="hover:bg-red-600/10 hover:text-red-600"
+        >
+          النوع
+          <ArrowUpDown className="mr-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => {
+        const gender = row.getValue("gender") as string;
+        return (
+          <Badge variant="secondary" className="text-xs">
+            {gender === "MALE" ? " ذكر" : "انثى"}
+            &nbsp;
+            {gender === "MALE" ? <Mars className="text-blue-500"/> : <Venus className="text-pink-500" />}
+          </Badge>
+        );
+      },
     },
-  },
-  {
-    accessorKey: "created_by",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="hover:bg-red-600/10 hover:text-red-600"
-      >
-        أضيف بواسطة
-        <ArrowUpDown className="mr-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => (
-      <div className="text-sm text-muted-foreground">
-        {row.getValue("created_by")}
-      </div>
-    ),
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ActionsCell,
-  },
-];
+    {
+      accessorKey: "subscription_type",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="hover:bg-red-600/10 hover:text-red-600"
+        >
+          نوع الاشتراك
+          <ArrowUpDown className="mr-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => {
+        const type = row.getValue("subscription_type") as string;
+        return (
+          <Badge className="bg-linear-to-r from-red-600 to-red-700 text-white border-none">
+            {formatSubscriptionType(type)}
+          </Badge>
+        );
+      },
+    },
+    {
+      accessorKey: "payment",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="hover:bg-red-600/10 hover:text-red-600"
+        >
+          <DollarSign className="ml-2 h-4 w-4" />
+          المبلغ
+          <ArrowUpDown className="mr-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => {
+        const payment = row.getValue("payment") as number;
+        return (
+          <div className="font-semibold text-green-600">
+            {payment.toLocaleString()} ج.م
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "payment_type",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="hover:bg-red-600/10 hover:text-red-600"
+        >
+          نوع الدفع
+          <ArrowUpDown className="mr-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => {
+        const type = row.getValue("payment_type") as string;
+        return (
+          <Badge variant={type === "NEW" ? "default" : "secondary"}>
+            {formatPaymentType(type)}
+          </Badge>
+        );
+      },
+    },
+    {
+      accessorKey: "visitors",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="hover:bg-red-600/10 hover:text-red-600"
+        >
+          المصدر
+          <ArrowUpDown className="mr-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => {
+        const visitor = row.getValue("visitors") as string;
+        const visitorIcons: Record<string, string> = {
+          FACEBOOK: "📘",
+          INSTAGRAM: "📷",
+          TIKTOK: "🎵",
+          WHATSAPP: "💬",
+          REFERRAL: "👥",
+        };
+        return (
+          <Badge variant="outline" className="text-xs">
+            {visitorIcons[visitor]} {formatVisitor(visitor)}
+          </Badge>
+        );
+      },
+    },
+    {
+      accessorKey: "created_at",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="hover:bg-red-600/10 hover:text-red-600"
+        >
+          <Calendar className="ml-2 h-4 w-4" />
+          تاريخ التسجيل
+          <ArrowUpDown className="mr-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => {
+        const date = row.getValue("created_at") as Date;
+        const formattedDate = new Date(date).toLocaleDateString("ar-EG", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        });
+        return (
+          <div className="text-sm text-muted-foreground">{formattedDate}</div>
+        );
+      },
+    },
+    {
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="hover:bg-red-600/10 hover:text-red-600"
+        >
+          أضيف بواسطة
+          <ArrowUpDown className="mr-2 h-4 w-4" />
+        </Button>
+      ),
+      accessorFn: (row: Client & { created_by?: { name: string } | null }) =>
+        row.created_by?.name ?? "غير معروف",
+      id: "created_by",
+      cell: ({ getValue }) => (
+        <div className="text-sm text-muted-foreground">
+          {getValue<string>()}
+        </div>
+      ),
+    },
+    {
+      id: "actions",
+      enableHiding: false,
+      cell: ActionsCell,
+    },
+  ];

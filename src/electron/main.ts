@@ -3,10 +3,10 @@ import { ipcMainHandle, isDev } from "./utils.js";
 import { getStaticData, pollResources } from "./resource-manger.js";
 import { getPreloadPath, getUIPath } from "./pathResolver.js";
 import { createTray } from "./tray.js";
-import { createMenu } from "./menu.js";
 import { mainHandleLogin } from "./handlers/auth.js";
 import { mainHandleGetClients } from "./handlers/clients/get-clients.js";
 import { mainHandleAddClient } from "./handlers/clients/add-client.js";
+import { mainHandleDeleteClients } from "./handlers/clients/delete-clients.js";
 
 app.whenReady().then(() => {
   const mainWindow = new BrowserWindow({
@@ -33,6 +33,7 @@ app.whenReady().then(() => {
   mainHandleLogin();
   mainHandleGetClients();
   mainHandleAddClient();
+  mainHandleDeleteClients();
 
   createTray(mainWindow);
   handleCloseEven(mainWindow);

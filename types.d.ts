@@ -44,22 +44,16 @@ declare global {
       response: Omit<Employee, "password">;
     };
     addClient: {
-      request: {
-        client_name: string;
-        phone: string;
-        code: string;
-        subscription_type: SubscriptionType;
-        payment: number;
-        gender: Gender;
-        visitors: Visitor;
-        payment_type: PaymentType;
-        created_by: string;
-      };
+      request: Omit<Client, "id" | "created_at" | "updated_at">;
       response: Client;
     };
     getClients: {
       request: void;
       response: Client[];
+    };
+    deleteClients: {
+      request: number[];
+      response: void;
     };
   }
 
@@ -79,6 +73,7 @@ declare global {
       }) => Promise<Omit<Employee, "password">>;
       addClient: (clientData: addClientSchema) => Promise<Client>;
       getClients: () => Promise<Client[]>;
+      deleteClients: (clientIds: number[]) => Promise<void>;
     };
   }
   interface ISuccessResponse<T> {

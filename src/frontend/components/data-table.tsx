@@ -75,7 +75,7 @@ export default function DataTable<TData>({
                   ))}
                 </TableRow>
               ))
-            ) : table.getRowModel().rows?.length > 0 ? (
+            ) : (
               <>
                 {table.getRowModel().rows.map((row) => (
                   <TableRow
@@ -104,25 +104,13 @@ export default function DataTable<TData>({
                   </TableRow>
                 ))}
               </>
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={table.getAllColumns().length}
-                  className="h-32 text-center text-gray-500"
-                >
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="text-lg">📄</div>
-                    <div>{emptyMessage}</div>
-                  </div>
-                </TableCell>
-              </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
 
       {/* Pagination */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-wrap whitespace-pre-wrap text-wrap flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         {/* Selection and Info */}
         <div className="flex flex-col gap-1 text-gray-600 text-sm">
           <div>
@@ -130,7 +118,7 @@ export default function DataTable<TData>({
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+        <div className="flex flex-wrap flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
           <div className="flex items-center gap-2">
             <span className="font-medium text-sm">الصفوف لكل صفحة</span>
             <Select
@@ -152,7 +140,7 @@ export default function DataTable<TData>({
             </Select>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Button
               variant="outline"
               className="hidden h-8 w-8 p-0 lg:flex"

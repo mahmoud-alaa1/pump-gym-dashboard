@@ -73,7 +73,7 @@ export default function AddClient() {
     <ResponsiveModal
       height="80vh"
       trigger={
-        <Button className="bg-linear-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 shadow-lg shadow-red-600/30">
+        <Button variant="link" className="shadow-lg shadow-red-600/30">
           <Users className="ml-2 h-4 w-4" />
           اضف عميل
         </Button>
@@ -124,7 +124,7 @@ export default function AddClient() {
                   className="bg-background/50"
                 />
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">الجنس</label>
+                  <label className="text-sm font-medium">النوع</label>
                   <FormRadioGroup
                     name="gender"
                     options={genderOptions}

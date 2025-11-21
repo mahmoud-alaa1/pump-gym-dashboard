@@ -13,7 +13,7 @@ export const addClientSchema = z.object({
   payment: z.coerce
     .number()
     .min(0, { message: "الدفع يجب أن يكون رقم إيجابي" }),
-  gender: z.string().min(1, { message: "الجنس مطلوب" }),
+  gender: z.string().min(1, { message: "النوع مطلوب" }),
   visitors: z.string().min(1, { message: "مصدر الزيارة مطلوب" }),
   payment_type: z.string().min(1, { message: "نوع الدفع مطلوب" }),
 });

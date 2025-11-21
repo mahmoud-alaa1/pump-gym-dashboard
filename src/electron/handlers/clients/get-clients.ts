@@ -1,7 +1,16 @@
 import { ipcMainHandle } from "../../utils.js";
 import { prisma } from "../../prismaClient.js";
 async function handleGetClients() {
-  const data = await prisma.client.findMany();
+  const data = await prisma.client.findMany({
+    include: {
+      created_by: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+
   return data;
 }
 

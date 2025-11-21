@@ -14,6 +14,7 @@ electron.contextBridge.exposeInMainWorld("electron", {
     ipcInvoke("login", credentials),
   addClient: (clientData) => ipcInvoke("addClient", clientData),
   getClients: () => ipcInvoke("getClients"),
+  deleteClients: (clientIds: number[]) => ipcInvoke("deleteClients", clientIds),
 } satisfies Window["electron"]);
 
 //utils

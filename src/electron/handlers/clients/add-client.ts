@@ -11,7 +11,7 @@ async function handleAddClient(payload: EventMap["addClient"]["request"]) {
       gender: payload.gender,
       visitors: payload.visitors,
       payment_type: payload.payment_type,
-      created_by: payload.created_by,
+      created_by_id: payload.created_by_id,
     },
   });
   return data;
