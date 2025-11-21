@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { User, Users } from "lucide-react";
+import { LogOut, User, Users } from "lucide-react";
 
 import { NavMain } from "@/frontend/components/nav-main";
 import {
@@ -22,6 +22,12 @@ const data = {
       url: "#",
       icon: Users,
       isActive: true,
+    },
+    {
+      title: "المدربين",
+      url: "#",
+      icon: User,
+      isActive: false,
     },
   ],
 };
@@ -55,6 +61,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   </div>
                 </div>
               )}
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              onClick={() => auth.logout()}
+              tooltip={"تسجيل الخروج"}
+            >
+              <LogOut />
+              <span>تسجيل الخروج</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

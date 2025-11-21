@@ -1,3 +1,9 @@
+import ClientsTable from "../modules/clients/components/clients-table";
+
 export default function ClientsPage() {
-  return <div>clients-page</div>;
+  return (
+    <div>
+      <ClientsTable />
+    </div>
+  );
 }

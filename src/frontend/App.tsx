@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 import LoginPage from "./pages/login-page";
 import ProtectedRoutes from "./components/protected-routes";
 import AuthRoutes from "./components/auth-routes";
@@ -17,16 +17,7 @@ function App() {
           </Route>
           <Route element={<ProtectedRoutes />}>
             <Route element={<MainLayout />}>
-              <Route
-                path="/"
-                element={
-                  <div>
-                    الصفحة الرئيسية. انتقل إلى{" "}
-                    <a href="/clients">صفحة العملاء</a>
-                    الصفحة الرئيسية. انتقل إلى <a href="/login">تسجيل الدخول</a>
-                  </div>
-                }
-              />
+              <Route path="/" element={<Navigate to="/clients" replace />} />
               <Route path="/clients" element={<ClientsPage />} />
             </Route>
           </Route>
