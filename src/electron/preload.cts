@@ -1,4 +1,4 @@
-import { Client } from "@prisma/client";
+import { Client, Employee } from "@prisma/client";
 import electron = require("electron");
 
 electron.contextBridge.exposeInMainWorld("electron", {
@@ -11,13 +11,18 @@ electron.contextBridge.exposeInMainWorld("electron", {
   sendFrameAction: (payload) => {
     electron.ipcRenderer.send("sendFrameAction", payload);
   },
-  login: (credentials: { email: string; password: string }) =>
+  login: (credentials: { username: string; password: string }) =>
     ipcInvoke("login", credentials),
   addClient: (clientData) => ipcInvoke("addClient", clientData),
   getClients: () => ipcInvoke("getClients"),
   deleteClients: (clientIds: number[]) => ipcInvoke("deleteClients", clientIds),
   editClient: (clientData: Partial<Client>) =>
     ipcInvoke("editClient", clientData),
+  getEmployees: () => ipcInvoke("getEmployees"),
+  addEmployee: (employeeData: Omit<Employee, "id">) =>
+    ipcInvoke("addEmployee", employeeData),
+  deleteEmployees: (employeeIds: number[]) =>
+    ipcInvoke("deleteEmployees", employeeIds),
 } satisfies Window["electron"]);
 
 //utils

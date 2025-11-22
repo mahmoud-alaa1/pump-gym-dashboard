@@ -8,6 +8,9 @@ import { mainHandleGetClients } from "./handlers/clients/get-clients.js";
 import { mainHandleAddClient } from "./handlers/clients/add-client.js";
 import { mainHandleDeleteClients } from "./handlers/clients/delete-clients.js";
 import { mainHandleEditClient } from "./handlers/clients/edit-client.js";
+import { mainHandleGetEmployees } from "./handlers/employees/get-employees.js";
+import { mainHandleAddEmployee } from "./handlers/employees/add-employee.js";
+import { mainHandleDeleteEmployees } from "./handlers/employees/delete-employee.js";
 
 app.whenReady().then(() => {
   const mainWindow = new BrowserWindow({
@@ -36,6 +39,9 @@ app.whenReady().then(() => {
   mainHandleAddClient();
   mainHandleDeleteClients();
   mainHandleEditClient();
+  mainHandleGetEmployees();
+  mainHandleAddEmployee();
+  mainHandleDeleteEmployees();
 
   createTray(mainWindow);
   handleCloseEven(mainWindow);
