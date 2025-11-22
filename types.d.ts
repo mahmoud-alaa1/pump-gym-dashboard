@@ -53,6 +53,18 @@ declare global {
       request: Partial<Client>;
       response: Client;
     };
+    getEmployees: {
+      request: void;
+      response: Employee[];
+    };
+    addEmployee: {
+      request: Omit<Employee, "id", "role">;
+      response: Employee;
+    };
+    deleteEmployees: {
+      request: number[];
+      response: void;
+    };
   }
 
   type UnsubscribeFunction = () => void;
@@ -73,6 +85,9 @@ declare global {
       getClients: () => Promise<Client[]>;
       deleteClients: (clientIds: number[]) => Promise<void>;
       editClient: (clientData: Partial<Client>) => Promise<Client>;
+      getEmployees: () => Promise<Employee[]>;
+      addEmployee: (employeeData: Omit<Employee, "id">) => Promise<Employee>;
+      deleteEmployees: (employeeIds: number[]) => Promise<void>;
     };
   }
   interface ISuccessResponse<T> {

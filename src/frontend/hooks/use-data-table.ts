@@ -20,11 +20,13 @@ export function useDataTable<TData>({
   columns,
   initialPageSize = 10,
   meta,
+  enableRowSelection = true,
 }: {
   data: TData[];
   columns: ColumnDef<TData>[];
   initialPageSize?: number;
   meta?: TableMeta<TData>;
+  enableRowSelection?: boolean | ((row: any) => boolean);
 }) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -42,7 +44,7 @@ export function useDataTable<TData>({
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    enableRowSelection: true,
+    enableRowSelection,
     state: {
       sorting,
       columnFilters,

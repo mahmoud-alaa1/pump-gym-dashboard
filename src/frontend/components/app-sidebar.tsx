@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { LogOut, User, Users } from "lucide-react";
+import { IdCardLanyard, LogOut, User, Users, UserStar } from "lucide-react";
 
 import { NavMain } from "@/frontend/components/nav-main";
 import {
@@ -15,23 +15,34 @@ import {
 } from "@/frontend/components/ui/sidebar";
 import useAuth from "../modules/auth/store/useAuth";
 
-const data = {
-  navMain: [
-    {
-      title: "العملاء",
-      url: "/clients",
-      icon: Users,
-    },
-    {
-      title: "المدربين",
-      url: "/trainers",
-      icon: User,
-    },
-  ],
-};
-
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const auth = useAuth();
+  const data = React.useMemo(() => {
+    return {
+      navMain: [
+        {
+          title: "العملاء",
+          url: "/clients",
+          icon: Users,
+        },
+        ...(auth.user?.role === "ADMIN"
+          ? [
+              {
+                title: "الموظفين",
+                url: "/employees",
+                icon: IdCardLanyard,
+              },
+              {
+                title: "المدربين",
+                url: "/trainers",
+                icon: UserStar,
+              },
+            ]
+          : []),
+      ],
+    };
+  }, [auth]);
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader></SidebarHeader>

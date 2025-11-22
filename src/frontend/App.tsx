@@ -6,6 +6,7 @@ import Providers from "./providers";
 import ClientsPage from "./pages/clients-page";
 import NotFoundPage from "./pages/not-found";
 import MainLayout from "./layouts/MainLayout";
+import EmployeesPage from "./pages/employees-page";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route element={<MainLayout />}>
               <Route path="/" element={<Navigate to="/clients" replace />} />
               <Route path="/clients" element={<ClientsPage />} />
+              <Route path="/employees" element={<EmployeesPage />} />
             </Route>
           </Route>
           <Route path="*" element={<NotFoundPage />} />
