@@ -1,5 +1,5 @@
+import { prisma } from "../../main.js";
 import { ipcMainHandle } from "../../utils.js";
-import { prisma } from "../../prismaClient.js";
 async function handleDeleteClients(clientIds: number[]) {
   await prisma.client.deleteMany({
     where: {

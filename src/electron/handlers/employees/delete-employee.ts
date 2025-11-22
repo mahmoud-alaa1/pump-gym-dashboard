@@ -1,6 +1,6 @@
 import { ipcMainHandle } from "../../utils.js";
-import { prisma } from "../../prismaClient.js";
 import { AppError } from "../../errors/AppError.js";
+import { prisma } from "../../main.js";
 
 async function handleDeleteEmployees(employeeIds: number[]) {
   // Check if any of the employees to delete are admins

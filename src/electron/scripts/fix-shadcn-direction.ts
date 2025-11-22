@@ -19,7 +19,6 @@ function convertClassesToLogical(className: string): string {
     const regex = new RegExp(`\\b${ltr}`, "g");
     newClass = newClass.replace(regex, logical);
   }
-  console.log(newClass);
 
   return newClass;
 }
@@ -33,7 +32,6 @@ function processComponent(filePath: string) {
   });
 
   fs.writeFileSync(filePath, content, "utf-8");
-  console.log(`Processed: ${filePath}`);
 }
 
 function traverseDir(dir: string) {

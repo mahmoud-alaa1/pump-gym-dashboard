@@ -27,13 +27,11 @@ import { Skeleton } from "@front/components/ui/skeleton";
 interface DataTableProps<TData> {
   table: TableType<TData>;
   isPending?: boolean;
-  emptyMessage?: string;
 }
 
 export default function DataTable<TData>({
   table,
   isPending = false,
-  emptyMessage = "لا توجد نتائج.",
 }: DataTableProps<TData>) {
   const totalRows = table.getFilteredRowModel().rows.length;
   const currentPage = table.getState().pagination.pageIndex + 1;
@@ -94,7 +92,7 @@ export default function DataTable<TData>({
                 ))}
                 {Array.from({
                   length: pageSize - table.getRowModel().rows.length,
-                }).map((row, i) => (
+                }).map((_, i) => (
                   <TableRow key={`empty-${i}`}>
                     {table.getVisibleFlatColumns().map((_, j) => (
                       <TableCell key={j} className="py-4">

@@ -3,12 +3,7 @@ import { getAssetsPath } from "./pathResolver.js";
 import path from "path";
 
 export function createTray(mainWindow: BrowserWindow) {
-  const tray = new Tray(
-    path.join(
-      getAssetsPath(),
-      process.platform === "win32" ? "trayIcon.png" : "trayIconTemplate.png"
-    )
-  );
+  const tray = new Tray(path.join(getAssetsPath(), "pump.jpg"));
   tray.on("click", () => {
     if (mainWindow.isVisible()) {
       mainWindow.hide();

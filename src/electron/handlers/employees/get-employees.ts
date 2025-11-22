@@ -1,5 +1,5 @@
+import { prisma } from "../../main.js";
 import { ipcMainHandle } from "../../utils.js";
-import { prisma } from "../../prismaClient.js";
 async function handleGetEmployees() {
   const data = await prisma.employee.findMany();
 

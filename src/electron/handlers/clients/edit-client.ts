@@ -1,5 +1,5 @@
+import { prisma } from "../../main.js";
 import { cleanData, ipcMainHandle } from "../../utils.js";
-import { prisma } from "../../prismaClient.js";
 async function handleEditClient(payload: EventMap["editClient"]["request"]) {
   const cleanPayload = cleanData(payload);
 

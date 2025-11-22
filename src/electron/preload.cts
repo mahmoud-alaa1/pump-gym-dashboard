@@ -1,4 +1,4 @@
-import { Client, Employee } from "@prisma/client";
+import pkg = require("@prisma/client");
 import electron = require("electron");
 
 electron.contextBridge.exposeInMainWorld("electron", {
@@ -16,10 +16,10 @@ electron.contextBridge.exposeInMainWorld("electron", {
   addClient: (clientData) => ipcInvoke("addClient", clientData),
   getClients: () => ipcInvoke("getClients"),
   deleteClients: (clientIds: number[]) => ipcInvoke("deleteClients", clientIds),
-  editClient: (clientData: Partial<Client>) =>
+  editClient: (clientData: Partial<pkg.Client>) =>
     ipcInvoke("editClient", clientData),
   getEmployees: () => ipcInvoke("getEmployees"),
-  addEmployee: (employeeData: Omit<Employee, "id">) =>
+  addEmployee: (employeeData: Omit<pkg.Employee, "id">) =>
     ipcInvoke("addEmployee", employeeData),
   deleteEmployees: (employeeIds: number[]) =>
     ipcInvoke("deleteEmployees", employeeIds),

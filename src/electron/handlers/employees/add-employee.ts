@@ -1,5 +1,5 @@
+import { prisma } from "../../main.js";
 import { ipcMainHandle } from "../../utils.js";
-import { prisma } from "../../prismaClient.js";
 import bcrypt from "bcryptjs";
 async function handleAddEmployee(payload: EventMap["addEmployee"]["request"]) {
   payload.password = await bcrypt.hash(payload.password, 10);

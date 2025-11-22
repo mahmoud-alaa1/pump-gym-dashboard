@@ -1,7 +1,7 @@
 import { app, BrowserWindow } from "electron";
 import { ipcMainHandle, isDev } from "./utils.js";
 import { getStaticData, pollResources } from "./resource-manger.js";
-import { getPreloadPath, getUIPath } from "./pathResolver.js";
+import { getAssetsPath, getPreloadPath, getUIPath } from "./pathResolver.js";
 import { createTray } from "./tray.js";
 import { mainHandleLogin } from "./handlers/auth.js";
 import { mainHandleGetClients } from "./handlers/clients/get-clients.js";
@@ -11,12 +11,48 @@ import { mainHandleEditClient } from "./handlers/clients/edit-client.js";
 import { mainHandleGetEmployees } from "./handlers/employees/get-employees.js";
 import { mainHandleAddEmployee } from "./handlers/employees/add-employee.js";
 import { mainHandleDeleteEmployees } from "./handlers/employees/delete-employee.js";
+import fs from "fs";
+
+import path from "path";
+import { createMenu } from "./menu.js";
+import { PrismaClient } from "@prisma/client";
+
+const dbPath = isDev()
+  ? path.join(__dirname, "./prisma/data.db")
+  : path.join(app.getPath("userData"), "data.db");
+
+if (!isDev()) {
+  try {
+    // database file does not exist, need to create
+    fs.copyFileSync(
+      path.join(process.resourcesPath, "prisma/data.db"),
+      dbPath,
+      fs.constants.COPYFILE_EXCL
+    );
+    console.log("New database file created");
+  } catch (err) {
+    //@ts-expect-error code property exists
+    if (err.code != "EEXIST") {
+      console.error(`Failed creating sqlite file.`, err);
+    } else {
+      console.log("Database file detected");
+    }
+  }
+}
+
+export const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: `file:${dbPath}`,
+    },
+  },
+});
 
 app.whenReady().then(() => {
   const mainWindow = new BrowserWindow({
     width: 1440,
     height: 1440,
-
+    icon: path.join(getAssetsPath(), "pump.jpg"),
     webPreferences: {
       preload: getPreloadPath(),
     },
@@ -44,6 +80,7 @@ app.whenReady().then(() => {
   mainHandleDeleteEmployees();
 
   createTray(mainWindow);
+  createMenu(mainWindow);
   handleCloseEven(mainWindow);
 });
 

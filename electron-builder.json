@@ -1,7 +1,7 @@
 {
-  "appId": "com.electroncourse.freecodecamp",
+  "appId": "com.pumpgym.dashboard",
   "files": ["dist-electron/**/*", "dist-react/**/*"],
-  "icon": "./desktopIcon.png",
+  "icon": "./pump.jpg",
   "mac": {
     "target": "dmg"
   },
@@ -9,8 +9,15 @@
     "target": "AppImage",
     "category": "Utility"
   },
+
   "win": {
     "target": ["msi", "portable"]
   },
-  "extraResources": ["dist-electron/preload.cjs", "src/assets/**","prisma/**"]
+  "extraResources": [
+    "dist-electron/preload.cjs",
+    "src/assets/**",
+    "prisma/**/*",
+    "node_modules/.prisma/**/*",
+    "node_modules/@prisma/client/**/*"
+  ]
 }

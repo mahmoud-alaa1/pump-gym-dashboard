@@ -1,6 +1,6 @@
 // src/main/handlers/employees.ts
 import { Employee } from "@prisma/client";
-import { prisma } from "../prismaClient.js";
+import { prisma } from "../main.js";
 
 export async function getAllEmployees() {
   return await prisma.employee.findMany();
