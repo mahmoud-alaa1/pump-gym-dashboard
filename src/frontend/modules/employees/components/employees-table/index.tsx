@@ -25,7 +25,7 @@ export default function EmployeesTable() {
     return employees.filter(
       (employee) =>
         employee.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        employee.email.toLowerCase().includes(searchQuery.toLowerCase())
+        employee.username.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [employees, searchQuery]);
 
@@ -94,7 +94,7 @@ export default function EmployeesTable() {
       </Card>
 
       {/* Table */}
-      <Card className="border-red-600/20">
+      <Card className="border-red-600/20 px-4">
         <DataTable table={table} />
       </Card>
     </div>

@@ -34,7 +34,7 @@ declare global {
       response: void;
     };
     login: {
-      request: { email: string; password: string };
+      request: { username: string; password: string };
       response: Omit<Employee, "password">;
     };
     addClient: {
@@ -78,7 +78,7 @@ declare global {
 
       sendFrameAction: (payload: FrameWindowAction) => void;
       login: (credentials: {
-        email: string;
+        username: string;
         password: string;
       }) => Promise<Omit<Employee, "password">>;
       addClient: (clientData: addClientSchema) => Promise<Client>;

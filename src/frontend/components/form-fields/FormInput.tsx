@@ -33,11 +33,10 @@ export default function FormInput<TFormValues extends FieldValues>({
   labelClassName,
   descriptionClassName,
   labelPosition = "top",
-  dir,
+  dir = "rtl",
   ...inputProps
 }: FormInputProps<TFormValues>) {
   const form = useFormContext<TFormValues>();
-  console.log(dir,name);
 
   return (
     <FormField

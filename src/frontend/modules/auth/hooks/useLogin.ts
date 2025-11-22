@@ -16,6 +16,7 @@ export default function useLogin() {
       toast.success("تم تسجيل الدخول بنجاح");
     },
     onError: (error: AppError) => {
+      console.error("Login error:", error);
       toast.error(error.message || "حدث خطأ أثناء تسجيل الدخول");
     },
   });

@@ -15,8 +15,8 @@ import { User } from "lucide-react";
 import FormPassword from "@/frontend/components/form-fields/FormPassword";
 import useLogin from "../hooks/useLogin";
 const defaultValues: loginSchema = {
-  email: "admin@admin.com",
-  password: "123456789",
+  username: "mostafa.saber",
+  password: "",
 };
 
 export function LoginForm({
@@ -27,7 +27,7 @@ export function LoginForm({
     resolver: zodResolver(loginSchema),
     defaultValues,
   });
-  const { mutate: login, error, data } = useLogin();
+  const { mutate: login } = useLogin();
 
   async function onSubmit(values: loginSchema) {
     login(values);
@@ -48,11 +48,11 @@ export function LoginForm({
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <FormInput<loginSchema>
-                name="email"
+                name="username"
                 placeholder="ادخل اسم المستخدم"
                 label="اسم المستخدم"
                 Icon={<User className="size-5" />}
-                autoComplete="email"
+                autoComplete="username"
               />
               <FormPassword<loginSchema>
                 name="password"

@@ -11,7 +11,7 @@ electron.contextBridge.exposeInMainWorld("electron", {
   sendFrameAction: (payload) => {
     electron.ipcRenderer.send("sendFrameAction", payload);
   },
-  login: (credentials: { email: string; password: string }) =>
+  login: (credentials: { username: string; password: string }) =>
     ipcInvoke("login", credentials),
   addClient: (clientData) => ipcInvoke("addClient", clientData),
   getClients: () => ipcInvoke("getClients"),

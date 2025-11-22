@@ -126,13 +126,13 @@ export default function ClientsTableFilters({
                       onChange={(e) =>
                         handleFilterChange("clientName", e.target.value)
                       }
-                      className="border-red-600/30 focus-visible:ring-red-600 pr-10"
+                      className="border-red-600/30 focus-visible:ring-red-600 ps-10"
                     />
                     {filters.clientName && (
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="absolute left-1 top-1/2 -translate-y-1/2 h-7 w-7 p-0 hover:bg-red-600/10"
+                        className="absolute start-1 top-1/2 -translate-y-1/2 h-7 w-7 p-0 hover:bg-red-600/10"
                         onClick={() => handleFilterChange("clientName", "")}
                       >
                         <X className="h-3 w-3" />

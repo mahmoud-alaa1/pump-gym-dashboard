@@ -11,7 +11,7 @@ import FormPassword from "@/frontend/components/form-fields/FormPassword";
 import Spinner from "@/frontend/components/ui/spinner";
 
 const defaultValues: employeeSchema = {
-  email: "",
+  username: "",
   name: "",
   password: "",
 };
@@ -74,25 +74,21 @@ export default function EmployeeForm({
                 label="اسم الموظف"
                 placeholder="ادخل اسم الموظف"
                 type="text"
-                Icon={
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-red-600" />
-                }
+                Icon={<User className=" size-5 text-red-600" />}
               />
               <FormInput
-                name="email"
+                name="username"
                 label="اسم المستخدم"
                 placeholder="mahmoud.leg"
                 type="text"
-                Icon={
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-red-600" />
-                }
+                Icon={<User className="size-5 text-red-600" />}
               />
               <FormPassword
                 name="password"
                 label="كلمة المرور"
                 placeholder="ادخل كلمة المرور"
               />
-              <Button type="submit" className="w-full mt-4" >
+              <Button type="submit" className="w-full mt-4">
                 {isPending ? (
                   <Spinner />
                 ) : mode === "add" ? (

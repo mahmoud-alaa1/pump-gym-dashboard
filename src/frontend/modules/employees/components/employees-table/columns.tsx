@@ -23,6 +23,7 @@ import {
   ShieldCheck,
   User,
   ArrowUpDown,
+  User2,
 } from "lucide-react";
 
 const ActionsCell = ({ row }: { row: any }) => {
@@ -44,7 +45,7 @@ const ActionsCell = ({ row }: { row: any }) => {
       <DropdownMenuContent align="end" className="w-40">
         <DropdownMenuLabel>الإجراءات</DropdownMenuLabel>
         <DropdownMenuItem
-          onClick={() => navigator.clipboard.writeText(employee.email)}
+          onClick={() => navigator.clipboard.writeText(employee.username)}
           className="cursor-pointer"
         >
           <Mail className="ml-2 h-4 w-4 text-blue-600" />
@@ -137,7 +138,7 @@ export const columns: ColumnDef<Employee>[] = [
     ),
     cell: ({ row }) => {
       const name = row.getValue("name") as string;
-      const email = row.original.email;
+      const username = row.original.username;
       return (
         <div className="flex items-center gap-3">
           <Avatar className="h-10 w-10 border-2 border-red-600/20">
@@ -148,8 +149,8 @@ export const columns: ColumnDef<Employee>[] = [
           <div className="flex flex-col">
             <span className="font-semibold text-foreground">{name}</span>
             <span className="text-xs text-muted-foreground flex items-center gap-1">
-              <Mail className="h-3 w-3" />
-              {email}
+              <User2 className="h-3 w-3" />
+              {username}
             </span>
           </div>
         </div>
