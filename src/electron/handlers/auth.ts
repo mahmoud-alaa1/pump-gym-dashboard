@@ -3,7 +3,9 @@ import { ipcMainHandle } from "../utils.js";
 import { AppError, ErrorCodes } from "../errors/AppError.js";
 import { prisma } from "../main.js";
 async function handleLogin(username: string, password: string) {
+  console.log("electron", username, password);
   const user = await prisma.employee.findUnique({ where: { username } });
+  console.log("electron", username, password);
   if (!user) {
     throw new AppError("المستخدم غير موجود", {
       code: ErrorCodes.USER_NOT_FOUND,

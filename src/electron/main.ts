@@ -13,13 +13,19 @@ import { mainHandleAddEmployee } from "./handlers/employees/add-employee.js";
 import { mainHandleDeleteEmployees } from "./handlers/employees/delete-employee.js";
 import fs from "fs";
 
-import path from "path";
+import path, { dirname } from "path";
 import { createMenu } from "./menu.js";
 import { PrismaClient } from "@prisma/client";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const dbPath = isDev()
-  ? path.join(__dirname, "./prisma/data.db")
+  ? path.join(app.getAppPath(), "./prisma/data.db")
   : path.join(app.getPath("userData"), "data.db");
+
+console.log(app.getAppPath());
 
 if (!isDev()) {
   try {
@@ -48,7 +54,8 @@ export const prisma = new PrismaClient({
   },
 });
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+  console.log(await prisma.employee.findMany());
   const mainWindow = new BrowserWindow({
     width: 1440,
     height: 1440,
