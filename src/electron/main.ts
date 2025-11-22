@@ -7,6 +7,7 @@ import { mainHandleLogin } from "./handlers/auth.js";
 import { mainHandleGetClients } from "./handlers/clients/get-clients.js";
 import { mainHandleAddClient } from "./handlers/clients/add-client.js";
 import { mainHandleDeleteClients } from "./handlers/clients/delete-clients.js";
+import { mainHandleEditClient } from "./handlers/clients/edit-client.js";
 
 app.whenReady().then(() => {
   const mainWindow = new BrowserWindow({
@@ -34,6 +35,7 @@ app.whenReady().then(() => {
   mainHandleGetClients();
   mainHandleAddClient();
   mainHandleDeleteClients();
+  mainHandleEditClient();
 
   createTray(mainWindow);
   handleCloseEven(mainWindow);

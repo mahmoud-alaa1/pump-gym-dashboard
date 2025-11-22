@@ -51,3 +51,14 @@ export function validateEventFrame(frame: WebFrameMain) {
     throw new Error("Malicious frame detected");
   }
 }
+
+/**
+ @param obj The object to clean by removing undefined values
+ @returns A new object with only defined values
+*/
+
+export function cleanData<T extends object>(obj: T): Partial<T> {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([, value]) => value !== undefined)
+  ) as Partial<T>;
+}

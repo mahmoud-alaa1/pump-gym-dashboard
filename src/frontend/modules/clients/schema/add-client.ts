@@ -22,6 +22,11 @@ export type addClientSchemaOutput = z.output<typeof addClientSchema>;
 export type addClientSchemaInput = z.input<typeof addClientSchema>;
 export type addClientSchema = z.infer<typeof addClientSchema>;
 
+export const editClientSchema = addClientSchema.partial();
+export type editClientSchemaInput = z.input<typeof editClientSchema>;
+export type editClientSchemaOutput = z.output<typeof editClientSchema>;
+export type editClientSchema = z.infer<typeof editClientSchema>;
+
 /*
       id               Int      @id @default(autoincrement())
   client_name      String

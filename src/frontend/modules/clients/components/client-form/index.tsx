@@ -10,9 +10,10 @@ import {
   addClientSchema,
   addClientSchemaInput,
   addClientSchemaOutput,
+  editClientSchemaOutput,
 } from "../../schema/add-client";
 import { User, Phone, Hash, CreditCard, Users, DollarSign } from "lucide-react";
-import useAddClient from "../../hooks/useAddClient";
+import Spinner from "@/frontend/components/ui/spinner";
 
 const defaultValues: addClientSchema = {
   code: "",
@@ -44,8 +45,8 @@ const visitorOptions = [
 ];
 
 const genderOptions = [
-  { label: "👨 ذكر", value: "MALE" },
-  { label: "👩 أنثى", value: "FEMALE" },
+  { label: "ذكر", value: "MALE" },
+  { label: "انثى", value: "FEMALE" },
 ];
 
 const paymentTypeOptions = [
@@ -53,45 +54,55 @@ const paymentTypeOptions = [
   { label: "تجديد", value: "RENEWAL" },
 ];
 
-export default function AddClient() {
+type clientFormProps = {
+  initialData?: editClientSchemaOutput;
+  mode?: "add" | "edit";
+  onSubmit: (data: addClientSchema, reset: () => void) => void;
+  isPending: boolean;
+};
+
+export default function ClientForm({
+  initialData,
+  mode = "add",
+  onSubmit,
+  isPending,
+}: clientFormProps) {
   const form = useForm<addClientSchemaInput, undefined, addClientSchemaOutput>({
     resolver: zodResolver(addClientSchema),
-    defaultValues,
+    defaultValues: initialData ?? defaultValues,
   });
-  const { mutate } = useAddClient();
 
-  function onSubmit(data: addClientSchemaOutput) {
-    console.log(data);
-    mutate(data, {
-      onSuccess: () => {
-        form.reset();
-      },
-    });
+  function submit(data: addClientSchema) {
+    onSubmit(data, () => form.reset());
   }
 
   return (
     <ResponsiveModal
       height="80vh"
       trigger={
-        <Button variant="link" className="shadow-lg shadow-red-600/30">
-          <Users className="ml-2 h-4 w-4" />
-          اضف عميل
-        </Button>
+        mode === "add" ? (
+          <Button variant="link" className="shadow-lg shadow-red-600/30">
+            <Users className="ml-2 h-4 w-4" />
+            اضف عميل
+          </Button>
+        ) : (
+          <Button variant="ghost" className="flex items-center gap-2 hover:underline">
+            <Users className="ml-2 h-4 w-4" />
+            تعديل العميل
+          </Button>
+        )
       }
     >
       <div className="space-y-6">
         {/* Header */}
         <div className="border-b pb-4">
           <h2 className="text-2xl font-bold bg-linear-to-r from-red-600 to-red-400 bg-clip-text text-transparent">
-            إضافة عميل جديد
+            {mode === "add" ? "إضافة عميل جديد" : "تعديل بيانات العميل"}
           </h2>
-          <p className="text-sm text-muted-foreground mt-1">
-            املأ البيانات التالية لإضافة عميل جديد إلى النظام
-          </p>
         </div>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(submit)} className="space-y-6">
             {/* Personal Information Section */}
             <div className="space-y-4">
               <h3 className="text-sm font-semibold text-foreground/80 flex items-center gap-2">
@@ -109,6 +120,7 @@ export default function AddClient() {
                 <FormInput
                   name="phone"
                   label="رقم الهاتف"
+                  dir="ltr"
                   placeholder="01xxxxxxxxx"
                   Icon={<Phone className="h-4 w-4" />}
                   className="bg-background/50"
@@ -188,10 +200,11 @@ export default function AddClient() {
             {/* Action Buttons */}
             <div className="flex gap-3 pt-4 border-t">
               <Button
+                disabled={isPending}
                 type="submit"
                 className="flex-1 bg-linear-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 shadow-lg shadow-red-600/30"
               >
-                حفظ العميل
+                {isPending ? <Spinner /> : "حفظ البيانات"}
               </Button>
               <Button
                 type="button"

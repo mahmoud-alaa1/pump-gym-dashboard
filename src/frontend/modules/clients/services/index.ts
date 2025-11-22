@@ -6,6 +6,11 @@ export async function addClientService(
 ) {
   return callService<Client>(() => window.electron.addClient(clientData));
 }
+export async function editClientService(
+  clientData: EventMap["editClient"]["request"]
+) {
+  return callService<Client>(() => window.electron.editClient(clientData));
+}
 
 export async function getClientsService() {
   return callService<Client[] & { created_by: { name: string } }>(() =>

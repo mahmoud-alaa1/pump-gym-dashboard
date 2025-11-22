@@ -22,7 +22,6 @@ import {
 } from "@/frontend/components/ui/popover";
 import { Calendar } from "@/frontend/components/ui/calendar";
 import {
-  Filter,
   X,
   Search,
   Calendar as CalendarIcon,
@@ -33,6 +32,7 @@ import { useState } from "react";
 import { DateRange } from "react-day-picker";
 import { format } from "date-fns";
 import { ar } from "date-fns/locale";
+import { Visitor } from "@prisma/client";
 
 export interface ClientFilters {
   clientName: string;
@@ -40,6 +40,7 @@ export interface ClientFilters {
   paymentType: string;
   startDate: string;
   endDate: string;
+  source: Visitor | "all";
 }
 
 interface ClientsTableFiltersProps {
@@ -83,6 +84,17 @@ export default function ClientsTableFilters({
     { value: "YEAR", label: "سنة" },
   ];
 
+  const sources = [
+    {
+      value: "FACEBOOK",
+      label: "فيسبوك",
+    },
+    { value: "INSTAGRAM", label: "انستجرام" },
+    { value: "TIKTOK", label: "تيك توك" },
+    { value: "WHATSAPP", label: "واتساب" },
+    { value: "REFERRAL", label: "إحالة" },
+  ];
+
   const paymentTypes = [
     { value: "NEW", label: "جديد" },
     { value: "RENEWAL", label: "تجديد" },
@@ -91,34 +103,6 @@ export default function ClientsTableFilters({
   return (
     <Card className="border-red-600/20 bg-linear-to-br from-background to-red-50/30 dark:to-red-950/10">
       <div className="p-4">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <div className="p-2 rounded-lg bg-red-600/10">
-              <Filter className="h-5 w-5 text-red-600" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-lg">تصفية النتائج</h3>
-              {hasActiveFilters && (
-                <p className="text-xs text-muted-foreground">
-                  {Object.values(filters).filter((v) => v).length} فلتر نشط
-                </p>
-              )}
-            </div>
-          </div>
-          {hasActiveFilters && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClearFilters}
-              className="text-red-600 hover:text-red-700 hover:bg-red-600/10"
-            >
-              <X className="h-4 w-4 ml-1" />
-              مسح الكل
-            </Button>
-          )}
-        </div>
-
         {/* Accordion for Filters */}
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="filters" className="border-none">
@@ -177,6 +161,30 @@ export default function ClientsTableFilters({
                       {subscriptionTypes.map((type) => (
                         <SelectItem key={type.value} value={type.value}>
                           {type.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2 text-sm font-medium">
+                    <Package className="h-4 w-4 text-red-600" />
+                    المصدر
+                  </Label>
+                  <Select
+                    value={filters.source}
+                    onValueChange={(value) =>
+                      handleFilterChange("source", value)
+                    }
+                  >
+                    <SelectTrigger className="border-red-600/30 focus:ring-red-600">
+                      <SelectValue placeholder="اختر المصدر" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">جميع المصادر</SelectItem>
+                      {sources.map((source) => (
+                        <SelectItem key={source.value} value={source.value}>
+                          {source.label}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -266,91 +274,14 @@ export default function ClientsTableFilters({
                     </div>
                   )}
                 </div>
-
-                {/* Active Filters Summary */}
-                {hasActiveFilters && (
-                  <div className="md:col-span-2 pt-4 border-t">
-                    <p className="text-sm font-medium mb-3">الفلاتر النشطة:</p>
-                    <div className="flex flex-wrap gap-2">
-                      {filters.clientName && (
-                        <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-red-600/10 text-red-600 text-sm">
-                          <Search className="h-3 w-3" />
-                          <span>{filters.clientName}</span>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-4 w-4 p-0 hover:bg-red-600/20 ml-1"
-                            onClick={() => handleFilterChange("clientName", "")}
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      )}
-                      {filters.subscriptionType &&
-                        filters.subscriptionType !== "all" && (
-                          <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-red-600/10 text-red-600 text-sm">
-                            <Package className="h-3 w-3" />
-                            <span>
-                              {subscriptionTypes.find(
-                                (t) => t.value === filters.subscriptionType
-                              )?.label || filters.subscriptionType}
-                            </span>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-4 w-4 p-0 hover:bg-red-600/20 ml-1"
-                              onClick={() =>
-                                handleFilterChange("subscriptionType", "")
-                              }
-                            >
-                              <X className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        )}
-                      {filters.paymentType && filters.paymentType !== "all" && (
-                        <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-red-600/10 text-red-600 text-sm">
-                          <CreditCard className="h-3 w-3" />
-                          <span>
-                            {paymentTypes.find(
-                              (t) => t.value === filters.paymentType
-                            )?.label || filters.paymentType}
-                          </span>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-4 w-4 p-0 hover:bg-red-600/20 ml-1"
-                            onClick={() =>
-                              handleFilterChange("paymentType", "")
-                            }
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      )}
-                      {(filters.startDate || filters.endDate) && (
-                        <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-red-600/10 text-red-600 text-sm">
-                          <CalendarIcon className="h-3 w-3" />
-                          <span>
-                            {filters.startDate && `من: ${filters.startDate}`}
-                            {filters.startDate && filters.endDate && " • "}
-                            {filters.endDate && `إلى: ${filters.endDate}`}
-                          </span>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-4 w-4 p-0 hover:bg-red-600/20 ml-1"
-                            onClick={() => {
-                              handleDateRangeChange(undefined);
-                            }}
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
               </div>
+              <Button
+                onClick={() => onClearFilters()}
+                className="mt-4"
+                variant="outline"
+              >
+                مسح الفلاتر
+              </Button>
             </AccordionContent>
           </AccordionItem>
         </Accordion>

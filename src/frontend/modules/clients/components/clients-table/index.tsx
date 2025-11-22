@@ -2,13 +2,13 @@
 import DataTable from "@/frontend/components/data-table";
 import { columns } from "./columns";
 import { useDataTable } from "@/frontend/hooks/use-data-table";
-import AddClient from "../add-client";
 import useGetClients from "../../hooks/useGetClients";
 import { Client } from "@prisma/client";
 import { Button } from "@/frontend/components/ui/button";
 import useDeleteClients from "../../hooks/useDeleteClients";
 import ClientsTableFilters, { ClientFilters } from "./filters";
 import { useMemo, useState } from "react";
+import AddClientForm from "../client-form/add-client-form";
 
 export default function ClientsTable() {
   const { data: clients } = useGetClients();
@@ -20,6 +20,7 @@ export default function ClientsTable() {
     paymentType: "",
     startDate: "",
     endDate: "",
+    source: "all",
   });
 
   const filteredClients = useMemo(() => {
@@ -50,6 +51,13 @@ export default function ClientsTable() {
         filters.paymentType &&
         filters.paymentType !== "all" &&
         client.payment_type !== filters.paymentType
+      ) {
+        return false;
+      }
+      if (
+        filters.source &&
+        filters.source !== "all" &&
+        client.visitors !== filters.source
       ) {
         return false;
       }
@@ -91,11 +99,10 @@ export default function ClientsTable() {
       paymentType: "",
       startDate: "",
       endDate: "",
+      source: "all",
     });
   };
-  console.log(
-    Object.keys(rowSelection).map((rowIdx) => table.getRow(rowIdx).original.id)
-  );
+
   return (
     <div className="space-y-5">
       {/* Filters */}
@@ -107,7 +114,7 @@ export default function ClientsTable() {
 
       {/* Actions Bar */}
       <div className="flex justify-between gap-5 flex-wrap">
-        <AddClient />
+        <AddClientForm />
         <div className="flex items-center gap-3">
           {filteredClients && (
             <div className="text-sm text-muted-foreground">

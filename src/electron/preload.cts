@@ -1,3 +1,4 @@
+import { Client } from "@prisma/client";
 import electron = require("electron");
 
 electron.contextBridge.exposeInMainWorld("electron", {
@@ -15,6 +16,8 @@ electron.contextBridge.exposeInMainWorld("electron", {
   addClient: (clientData) => ipcInvoke("addClient", clientData),
   getClients: () => ipcInvoke("getClients"),
   deleteClients: (clientIds: number[]) => ipcInvoke("deleteClients", clientIds),
+  editClient: (clientData: Partial<Client>) =>
+    ipcInvoke("editClient", clientData),
 } satisfies Window["electron"]);
 
 //utils

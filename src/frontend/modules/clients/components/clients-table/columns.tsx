@@ -6,7 +6,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/frontend/components/ui/dropdown-menu";
@@ -16,7 +15,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import {
   ArrowUpDown,
   MoreHorizontal,
-  Pencil,
   Trash2,
   User,
   Phone,
@@ -30,6 +28,7 @@ import {
 import useAuth from "@/frontend/modules/auth/store/useAuth";
 import useDeleteClients from "../../hooks/useDeleteClients";
 import { toast } from "sonner";
+import EditClientForm from "../client-form/edit-client-form";
 
 // Helper function to format subscription type
 const formatSubscriptionType = (type: string) => {
@@ -76,27 +75,20 @@ const ActionsCell = ({ row }: { row: any }) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-40">
-        <DropdownMenuLabel>الإجراءات</DropdownMenuLabel>
         <DropdownMenuItem
           onClick={() => {
             navigator.clipboard.writeText(client.code.toString());
             toast.success(`تم نسخ الكود: ${client.code}`);
           }}
+          className="px-4"
         >
           <Copy />
           نسخ الكود
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={() => {
-            // TODO: Implement edit functionality
-            console.log("Edit client:", client);
-          }}
-          className="cursor-pointer"
-        >
-          <Pencil className="ml-2 h-4 w-4 text-blue-600" />
-          <span>تعديل</span>
-        </DropdownMenuItem>
+        <div className=" hover:bg-accent">
+          <EditClientForm client={client} />
+        </div>
         {auth.user?.role === "ADMIN" && (
           <DropdownMenuItem
             onClick={() => {
@@ -194,7 +186,9 @@ export const columns: ColumnDef<Client & { created_by?: { name: string } }>[] =
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="font-mono text-sm">{row.getValue("phone")}</div>
+        <div className="font-mono text-center" dir="ltr">
+          {row.getValue("phone")}
+        </div>
       ),
     },
     {
@@ -212,10 +206,14 @@ export const columns: ColumnDef<Client & { created_by?: { name: string } }>[] =
       cell: ({ row }) => {
         const gender = row.getValue("gender") as string;
         return (
-          <Badge variant="secondary" className="text-xs">
+          <Badge variant="secondary" className="text-xs w-full justify-center">
             {gender === "MALE" ? " ذكر" : "انثى"}
             &nbsp;
-            {gender === "MALE" ? <Mars className="text-blue-500"/> : <Venus className="text-pink-500" />}
+            {gender === "MALE" ? (
+              <Mars className="text-blue-500" />
+            ) : (
+              <Venus className="text-pink-500" />
+            )}
           </Badge>
         );
       },

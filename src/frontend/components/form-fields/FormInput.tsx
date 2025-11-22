@@ -33,9 +33,11 @@ export default function FormInput<TFormValues extends FieldValues>({
   labelClassName,
   descriptionClassName,
   labelPosition = "top",
+  dir,
   ...inputProps
 }: FormInputProps<TFormValues>) {
   const form = useFormContext<TFormValues>();
+  console.log(dir,name);
 
   return (
     <FormField
@@ -66,7 +68,12 @@ export default function FormInput<TFormValues extends FieldValues>({
             <FormControl>
               <div className="relative h-fit">
                 {Icon && (
-                  <div className="absolute inset-y-0 end-2.5 flex items-center justify-center text-primary">
+                  <div
+                    className={cn(
+                      "absolute inset-y-0 flex items-center justify-center text-primary",
+                      dir === "ltr" ? "start-2.5" : "end-2.5"
+                    )}
+                  >
                     {Icon}
                   </div>
                 )}
@@ -74,6 +81,7 @@ export default function FormInput<TFormValues extends FieldValues>({
                   id={name}
                   {...field}
                   {...inputProps}
+                  dir={dir}
                   className={cn(Icon && "pe-9 transition-all", className)}
                   value={field.value}
                 />

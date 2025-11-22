@@ -53,9 +53,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   </div>
                   <div className="text-sm space-y-2 font-medium leading-none">
                     <div>{auth.user.name}</div>
-                    <div className="text-xs text-muted-foreground">
-                      {auth.user.email}
-                    </div>
                   </div>
                 </div>
               )}

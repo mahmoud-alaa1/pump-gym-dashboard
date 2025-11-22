@@ -6,8 +6,10 @@ import { queryClient } from "@/frontend/providers/react-query-provider";
 export default function useDeleteClients() {
   return useMutation({
     mutationFn: deleteClientsService,
-    onSuccess: () => {
-      toast.success("تم حذف العملاء بنجاح");
+    onSuccess: (_, variables) => {
+      toast.success(
+        `تم حذف ${variables.length == 1 ? "العميل" : "العملاء"} بنجاح`
+      );
       queryClient.invalidateQueries({ queryKey: ["clients"] });
     },
     onError: (err) => {
