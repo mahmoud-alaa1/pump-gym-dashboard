@@ -13,19 +13,33 @@ import { mainHandleAddEmployee } from "./handlers/employees/add-employee.js";
 import { mainHandleDeleteEmployees } from "./handlers/employees/delete-employee.js";
 import fs from "fs";
 
-import path, { dirname } from "path";
-import { createMenu } from "./menu.js";
-import { PrismaClient } from "@prisma/client";
-import { fileURLToPath } from "url";
+let PrismaClient: typeof import("@prisma/client").PrismaClient;
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
+if (app.isPackaged) {
+  const clientPath = path.join(
+    process.resourcesPath,
+    "prisma/@prisma/client/index.js"
+  );
+  PrismaClient = (await import(pathToFileURL(clientPath).href)).PrismaClient;
+} else {
+  PrismaClient = (await import("@prisma/client")).PrismaClient;
+}
 const dbPath = isDev()
   ? path.join(app.getAppPath(), "./prisma/data.db")
   : path.join(app.getPath("userData"), "data.db");
+export const prisma = new PrismaClient({
+  datasources: { db: { url: `file:${dbPath}` } },
+});
+import path from "path";
+import { createMenu } from "./menu.js";
+import { pathToFileURL } from "url";
 
-console.log(app.getAppPath());
+if (app.isPackaged) {
+  process.env.PRISMA_QUERY_ENGINE_BINARY = path.join(
+    process.resourcesPath,
+    "prisma/.prisma/query_engine-windows.dll.node"
+  );
+}
 
 if (!isDev()) {
   try {
@@ -46,16 +60,7 @@ if (!isDev()) {
   }
 }
 
-export const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: `file:${dbPath}`,
-    },
-  },
-});
-
 app.whenReady().then(async () => {
-  console.log(await prisma.employee.findMany());
   const mainWindow = new BrowserWindow({
     width: 1440,
     height: 1440,

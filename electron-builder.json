@@ -11,13 +11,24 @@
   },
 
   "win": {
-    "target": ["msi", "portable"]
+    "target": ["portable"],
+    "verifyUpdateCodeSignature": false
   },
+  "asar": false,
   "extraResources": [
     "dist-electron/preload.cjs",
     "src/assets/**",
-    "prisma/**/*",
-    "node_modules/.prisma/**/*",
-    "node_modules/@prisma/client/**/*"
+    {
+      "from": "node_modules/.prisma/client",
+      "to": "prisma/.prisma"
+    },
+    {
+      "from": "node_modules/@prisma/client",
+      "to": "prisma/@prisma/client"
+    },
+    {
+      "from": "prisma/data.db",
+      "to": "prisma/data.db"
+    }
   ]
 }
