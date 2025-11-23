@@ -11,10 +11,8 @@
   },
 
   "win": {
-    "target": ["portable"],
-    "verifyUpdateCodeSignature": false
+    "target": ["portable"]
   },
-  "asar": false,
   "extraResources": [
     "dist-electron/preload.cjs",
     "src/assets/**",
@@ -30,5 +28,6 @@
       "from": "prisma/data.db",
       "to": "prisma/data.db"
     }
-  ]
+  ],
+  "asarUnpack": ["node_modules/@prisma/**/*", "node_modules/.prisma/**/*"]
 }
