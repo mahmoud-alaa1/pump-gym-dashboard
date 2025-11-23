@@ -1,6 +1,16 @@
 {
   "appId": "com.pumpgym.dashboard",
-  "files": ["dist-electron/**/*", "dist-react/**/*"],
+  "files": [
+    "dist-electron/**/*",
+    "dist-react/**/*",
+    "package.json",
+    {
+      "from": "node_modules/.prisma",
+      "to": "node_modules/.prisma",
+      "filter": ["**/*"]
+    },
+    "node_modules/@prisma/client/**/*"
+  ],
   "icon": "./pump.jpg",
   "mac": {
     "target": "dmg"
@@ -9,21 +19,12 @@
     "target": "AppImage",
     "category": "Utility"
   },
-
   "win": {
     "target": ["portable"]
   },
   "extraResources": [
     "dist-electron/preload.cjs",
     "src/assets/**",
-    {
-      "from": "node_modules/.prisma/client",
-      "to": "prisma/.prisma"
-    },
-    {
-      "from": "node_modules/@prisma/client",
-      "to": "prisma/@prisma/client"
-    },
     {
       "from": "prisma/data.db",
       "to": "prisma/data.db"

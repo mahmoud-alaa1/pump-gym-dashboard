@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router";
+import { Routes, Route, Navigate, HashRouter } from "react-router";
 import LoginPage from "./pages/login-page";
 import ProtectedRoutes from "./components/protected-routes";
 import AuthRoutes from "./components/auth-routes";
@@ -11,7 +11,7 @@ import EmployeesPage from "./pages/employees-page";
 function App() {
   return (
     <Providers>
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route element={<AuthRoutes />}>
             <Route path="/login" element={<LoginPage />} />
@@ -25,7 +25,7 @@ function App() {
           </Route>
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </Providers>
   );
 }
