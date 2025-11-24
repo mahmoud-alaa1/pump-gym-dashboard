@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 export default function MainLayoutHeader() {
   const header = useRef<HTMLElement>(null);
   useEffect(() => {
-    const handleScroll = (e: Event) => {
+    const handleScroll = () => {
       if (window.pageYOffset > 0) {
         header.current?.classList.add("bg-black");
       } else {
