@@ -5,8 +5,8 @@ import AuthRoutes from "./components/auth-routes";
 import Providers from "./providers";
 import ClientsPage from "./pages/clients-page";
 import NotFoundPage from "./pages/not-found";
-import MainLayout from "./layouts/MainLayout";
 import EmployeesPage from "./pages/employees-page";
+import MainLayout from "./layouts/main-layout";
 
 function App() {
   return (

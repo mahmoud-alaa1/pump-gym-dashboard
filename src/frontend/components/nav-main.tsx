@@ -6,6 +6,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/frontend/components/ui/sidebar";
 import { NavLink } from "react-router";
 
@@ -18,6 +19,7 @@ export function NavMain({
     icon?: LucideIcon;
   }[];
 }) {
+  const sidebarState = useSidebar();
   return (
     <SidebarGroup>
       <SidebarGroupLabel>الجداول</SidebarGroupLabel>
@@ -25,7 +27,10 @@ export function NavMain({
         {items.map((item) => (
           <SidebarMenuItem key={item.title}>
             <NavLink to={item.url}>
-              <SidebarMenuButton tooltip={item.title}>
+              <SidebarMenuButton
+                onClick={() => sidebarState.setOpenMobile(false)}
+                tooltip={item.title}
+              >
                 {item.icon && <item.icon />}
                 <span>{item.title}</span>
               </SidebarMenuButton>

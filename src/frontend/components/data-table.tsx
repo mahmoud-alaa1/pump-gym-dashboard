@@ -41,6 +41,9 @@ export default function DataTable<TData>({
   const startRow = table.getState().pagination.pageIndex * pageSize + 1;
   const endRow = Math.min(startRow + pageSize - 1, totalRows);
 
+  const hasFooter = table
+    .getAllLeafColumns()
+    .some((col) => col.columnDef.footer);
   return (
     <div className="w-full space-y-4">
       {/* Table */}
@@ -104,6 +107,22 @@ export default function DataTable<TData>({
               </>
             )}
           </TableBody>
+          {hasFooter && (
+            <tfoot className="bg-muted/50 font-medium">
+              {table.getFooterGroups().map((footerGroup) => (
+                <TableRow key={footerGroup.id}>
+                  {footerGroup.headers.map((footer) => (
+                    <TableCell key={footer.id}>
+                      {flexRender(
+                        footer.column.columnDef.footer,
+                        footer.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </tfoot>
+          )}
         </Table>
       </div>
 

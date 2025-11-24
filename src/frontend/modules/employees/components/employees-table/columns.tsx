@@ -49,7 +49,7 @@ const ActionsCell = ({ row }: { row: any }) => {
           className="cursor-pointer"
         >
           <Mail className="ml-2 h-4 w-4 text-blue-600" />
-          <span>نسخ البريد</span>
+          <span>نسخ اسم المستخدم</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem

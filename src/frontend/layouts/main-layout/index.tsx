@@ -1,35 +1,16 @@
 import { AppSidebar } from "@front/components/app-sidebar";
 
-import { Separator } from "@front/components/ui/separator";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@front/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@front/components/ui/sidebar";
 import { Outlet } from "react-router";
-
-import pumpImage from "@/assets/pump.webp";
+import MainLayoutHeader from "./main-layout-header";
 
 export default function MainLayout() {
   return (
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex justify-between p-4 mb-4 items-center  shrink-0  gap-2 transition-[width,height] ease-linear ">
-          <div className="flex items-center gap-2 ">
-            <SidebarTrigger className="-ms-1" />
-            <Separator
-              orientation="horizontal"
-              className="me-2 data-[orientation=vertical]:h-4"
-            />
-          </div>
-          <img
-            src={pumpImage}
-            alt="Pump Gym"
-            className="size-20 pointer-events-none "
-          />
-        </header>
-        <main className="p-4">
+        <MainLayoutHeader />
+        <main className="p-4 ">
           <Outlet />
         </main>
         {/* <div className="flex flex-1 flex-col gap-4 p-4 pt-0">

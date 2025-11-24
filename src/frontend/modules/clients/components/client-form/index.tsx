@@ -14,6 +14,7 @@ import {
 } from "../../schema/add-client";
 import { User, Phone, Hash, CreditCard, Users, DollarSign } from "lucide-react";
 import Spinner from "@/frontend/components/ui/spinner";
+import { genderOptions, paymentTypeOptions, subscriptionOptions, visitorOptions } from "@/frontend/lib/constants";
 
 const defaultValues: addClientSchema = {
   code: "",
@@ -26,33 +27,7 @@ const defaultValues: addClientSchema = {
   visitors: "",
 };
 
-const subscriptionOptions = [
-  { label: "8 حصص", value: "LESSONS_8" },
-  { label: "12 حصة", value: "LESSONS_12" },
-  { label: "شهر واحد", value: "ONE_MONTH" },
-  { label: "شهرين", value: "TWO_MONTHS" },
-  { label: "ثلاثة أشهر", value: "THREE_MONTHS" },
-  { label: "ستة أشهر", value: "SIX_MONTHS" },
-  { label: "سنة", value: "YEAR" },
-];
 
-const visitorOptions = [
-  { label: "فيسبوك", value: "FACEBOOK" },
-  { label: "انستغرام", value: "INSTAGRAM" },
-  { label: "تيك توك", value: "TIKTOK" },
-  { label: "واتساب", value: "WHATSAPP" },
-  { label: "إحالة", value: "REFERRAL" },
-];
-
-const genderOptions = [
-  { label: "ذكر", value: "MALE" },
-  { label: "انثى", value: "FEMALE" },
-];
-
-const paymentTypeOptions = [
-  { label: "اول مرة", value: "NEW" },
-  { label: "تجديد", value: "RENEWAL" },
-];
 
 type clientFormProps = {
   initialData?: editClientSchemaOutput;

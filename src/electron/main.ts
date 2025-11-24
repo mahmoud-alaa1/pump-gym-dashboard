@@ -21,22 +21,31 @@ const logPath = path.join(app.getPath("userData"), "debug-logs.txt");
 
 // Reset log file on startup
 try {
-  fs.writeFileSync(logPath, `*** APP STARTED AT ${new Date().toISOString()} ***\n`);
-} catch (e) { /* ignore */ }
+  fs.writeFileSync(
+    logPath,
+    `*** APP STARTED AT ${new Date().toISOString()} ***\n`
+  );
+} catch (e) {
+  /* ignore */
+}
 
 function logToFile(type: string, args: any[]) {
   try {
-    const message = args.map(arg => 
-      typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
-    ).join(' ');
+    const message = args
+      .map((arg) =>
+        typeof arg === "object" ? JSON.stringify(arg) : String(arg)
+      )
+      .join(" ");
     fs.appendFileSync(logPath, `[${type}] ${message}\n`);
-  } catch (err) { /* ignore */ }
+  } catch (err) {
+    /* ignore */
+  }
 }
 
 // Override console.log to write to file
 const originalLog = console.log;
 console.log = (...args) => {
-  originalLog(...args); 
+  originalLog(...args);
   logToFile("INFO", args);
 };
 
@@ -64,7 +73,7 @@ console.log("-----------------------------------------");
 // 2. Initialize Prisma
 export const prisma = new PrismaClient({
   datasources: { db: { url: `file:${dbPath}` } },
-  log: ['query', 'info', 'warn', 'error'],
+  log: ["query", "info", "warn", "error"],
 });
 
 // 3. DB Copy Logic
@@ -73,20 +82,23 @@ if (!isDev()) {
     // This matches: "to": "prisma/data.db" in package.json
     const sourcePath = path.join(process.resourcesPath, "prisma", "data.db");
     console.log("Attempting to copy DB from:", sourcePath);
-    
-    if (!fs.existsSync(dbPath)) {
-        // Ensure folder exists
-        const dbDir = path.dirname(dbPath);
-        if (!fs.existsSync(dbDir)) fs.mkdirSync(dbDir, { recursive: true });
 
-        fs.copyFileSync(sourcePath, dbPath, fs.constants.COPYFILE_EXCL);
-        console.log("SUCCESS: New database file created at:", dbPath);
+    if (!fs.existsSync(dbPath)) {
+      // Ensure folder exists
+      const dbDir = path.dirname(dbPath);
+      if (!fs.existsSync(dbDir)) fs.mkdirSync(dbDir, { recursive: true });
+
+      fs.copyFileSync(sourcePath, dbPath, fs.constants.COPYFILE_EXCL);
+      console.log("SUCCESS: New database file created at:", dbPath);
     } else {
-        console.log("SKIP: Database file already exists at:", dbPath);
+      console.log("SKIP: Database file already exists at:", dbPath);
     }
   } catch (err) {
     console.error("CRITICAL ERROR: Failed creating sqlite file.", err);
-    dialog.showErrorBox("Database Error", `Failed to initialize database: ${err}`);
+    dialog.showErrorBox(
+      "Database Error",
+      `Failed to initialize database: ${err}`
+    );
   }
 }
 
@@ -107,7 +119,7 @@ app.whenReady().then(async () => {
   } else {
     mainWindow.loadFile(getUIPath());
   }
-  
+
   // Force DevTools open for debugging
   mainWindow.webContents.openDevTools();
 
@@ -117,10 +129,13 @@ app.whenReady().then(async () => {
   try {
     console.log("Testing Prisma Connection...");
     await prisma.$connect();
-    console.log("✅ PRISMA CONNECTED SUCCESSFULLY");
+    console.log("PRISMA CONNECTED SUCCESSFULLY");
   } catch (e) {
-    console.error("❌ PRISMA CONNECTION FAILED:", e);
-    dialog.showErrorBox("DB Connection Failed", "Check debug-logs.txt for details.");
+    console.error("PRISMA CONNECTION FAILED:", e);
+    dialog.showErrorBox(
+      "DB Connection Failed",
+      "Check debug-logs.txt for details."
+    );
   }
 
   ipcMainHandle("getStaticData", () => {

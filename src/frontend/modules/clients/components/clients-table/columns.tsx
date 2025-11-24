@@ -86,8 +86,11 @@ const ActionsCell = ({ row }: { row: any }) => {
           نسخ الكود
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <div className=" hover:bg-accent">
-          <EditClientForm client={client} />
+        <div className="hover:bg-accent">
+          {(auth.user?.role === "ADMIN" ||
+            auth.user?.id === client.created_by_id) && (
+            <EditClientForm client={client} />
+          )}
         </div>
         {auth.user?.role === "ADMIN" && (
           <DropdownMenuItem
@@ -257,6 +260,27 @@ export const columns: ColumnDef<Client & { created_by?: { name: string } }>[] =
         return (
           <div className="font-semibold text-green-600">
             {payment.toLocaleString()} ج.م
+          </div>
+        );
+      },
+      footer: (props) => {
+        const total = props.table
+          .getFilteredRowModel()
+          .rows.reduce(
+            (sum, row) => sum + (row.getValue("payment") as number),
+            0
+          );
+        const totalCurrentPage = props.table
+          .getPaginationRowModel()
+          .rows.reduce(
+            (sum, row) => sum + (row.getValue("payment") as number),
+            0
+          );
+        console.log(totalCurrentPage);
+        return (
+          <div className="font-semibold text-green-600 flex gap-5 flex-col justify-center text-center">
+            <div>المجموع الكلي: {total.toLocaleString()} ج.م</div>
+            <div>الصفحة الحالية: {totalCurrentPage.toLocaleString()} ج.م</div>
           </div>
         );
       },
